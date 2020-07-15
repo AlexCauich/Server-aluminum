@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,12 +15,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('registers', 'RegisterController')->except(['create', 'edit']);
-
-
 Route::post('register', 'UserController@register');
 Route::post('login', 'UserController@login');
-Route::get('profile', 'UserController@getAuthenticatedUser');
+
+//Route::get('profile', 'UserController@getAuthenticatedUser',function () {
+//})->middleware(AgeMiddleware::class);
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('profile', ['middleware' => 'currentUser', 'uses' => 'UserController@getAuthenticatedUser']);
+    Route::resource('registers', 'RegisterController')->except(['create', 'edit']);
+    
+});
 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
