@@ -22,7 +22,7 @@ Route::post('login', 'UserController@login');
 //})->middleware(AgeMiddleware::class);
 
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('profile', ['middleware' => 'currentUser', 'uses' => 'UserController@getAuthenticatedUser']);
+    Route::get('profile', 'UserController@getAuthenticatedUser');
     Route::resource('registers', 'RegisterController')->except(['create', 'edit']);
     
 });
